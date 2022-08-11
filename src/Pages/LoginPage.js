@@ -17,7 +17,7 @@ function LoginPage() {
         auth,
         email,
         password
-      );
+      )
       localStorage.setItem('currentUser' , JSON.stringify(result))
       setLoading(false);
       toast.success("Login successfull");

@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { collection, addDoc, getDocs } from "firebase/firestore";
+
 import fireDB from "../fireConfig";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, } from "react-redux";
+
 function Homepage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const [searchKey, setSearchKey] = useState("");
   const [filterType, setFilterType] = useState("");
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+ 
   useEffect(() => {
     getData();
   }, []);
@@ -18,11 +23,13 @@ function Homepage() {
   async function getData() {
     try {
       setLoading(true);
+ 
       const users = await getDocs(collection(fireDB, "items"));
       const productsArray = [];
       
 
       setProducts(productsArray);
+    
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -36,6 +43,7 @@ function Homepage() {
     <Layout loading={loading}>
       <div className="container">
         <div className="d-flex w-50 align-items-center my-3 justify-content-center">
+          
           <input
             type="text"
             value={searchKey}
@@ -81,7 +89,7 @@ function Homepage() {
                     </div>
                     <div className="product-actions">
                       <div className="d-flex">
-                        <button><Link to="/dish">View</Link></button>
+                        <button><Link to="/discription">View</Link></button>
                       </div>
                     </div>
                   </div>

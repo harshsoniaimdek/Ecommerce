@@ -1,36 +1,37 @@
-const Initial_state ={
+const Initial_State = {
     cartItems: ['item1'],
     showCart: false
-}
-
-export const cartReducer = (state = Initial_state, action) => {
-    switch(action.type) {
+  };
+  
+  export const cartReducer = (state = Initial_State, action) => {
+    switch (action.type) {
         case 'ADD_TO_CART':
             return {
                 ...state,
-                cartItems: addItemToCart(state.cartITems, action.payload)
+                cartItems: addItemToCart(state.cartItems, action.payload)
             }
-        case 'DELETE_FROM_CART':
+        case 'DELETE_FROM_CART' : {
+                  return{
+                    ...state ,
+                    cartItems : state.cartItems.filter(obj=>obj.id !== action.payload.id)
+                  }
+                }
+        case 'Increase_Item_Count_Cart':
             return {
                 ...state,
-                cartItems: state.cartItems.filter(obj=>obj.id !== action.payload.id)
+                cartItems: AddExistingItemToCart(state.cartItems, action.payload)
             }
-        case 'INCREASE_ITEM_COUNT':
+        case 'Decrease_Item_Count_Cart':
             return {
                 ...state,
-                cartItems: AddExistingItemToCart(state.cartITems, action.payload)
-            }
-        case 'DELETE_ITEM_COUNT':
-            return {
-                ...state,
-                cartItems: RemoveExistingItemFromCart(state.cartITems, action.payload)
+                cartItems: RemoveExistingItemFromCart(state.cartItems, action.payload)
             }
         default:
             return state;
     }
-}
-
-const AddExistingItemToCart = ((cartItems, itemToAdd) => {
+  }
+  
+  const AddExistingItemToCart = ((cartItems, itemToAdd) => {
     return cartItems.map(item =>
         item.id === itemToAdd.id ? { ...item, count: item.count + 1 } : item
     )
