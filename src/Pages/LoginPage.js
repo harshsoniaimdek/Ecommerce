@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
-import Loader from "../components/Loader";
+import Loader from "../Components/Loader";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cpassword, setCPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const login = async () => {
@@ -17,7 +16,7 @@ function LoginPage() {
         auth,
         email,
         password
-      )
+      );
       localStorage.setItem('currentUser' , JSON.stringify(result))
       setLoading(false);
       toast.success("Login successfull");
@@ -64,15 +63,6 @@ function LoginPage() {
 
             <Link to='/register'>Click Here To Register</Link>
           </div>
-        </div>
-        <div className="col-md-5 z1">
-          <lottie-player
-            src="https://assets7.lottiefiles.com/packages/lf20_yr6zz3wv.json"
-            background="transparent"
-            speed="1"
-            loop
-            autoplay
-          ></lottie-player>
         </div>
       </div>
 

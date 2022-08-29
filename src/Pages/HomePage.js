@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../components/Layout";
+import Layout from "../Components/Layout";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-
-import fireDB from "../fireConfig";
+import fireDB from "../FireConfig";
+// import { fireproducts } from "../firecommerce-products";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch, } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 function Homepage() {
   const [products, setProducts] = useState([]);
+  const { cartItems } = useSelector((state) => state.cartReducer);
   const [loading, setLoading] = useState(false);
-
   const [searchKey, setSearchKey] = useState("");
   const [filterType, setFilterType] = useState("");
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
- 
   useEffect(() => {
     getData();
   }, []);
@@ -23,27 +20,37 @@ function Homepage() {
   async function getData() {
     try {
       setLoading(true);
- 
       const users = await getDocs(collection(fireDB, "items"));
       const productsArray = [];
-      
+      users.forEach((doc) => {
+        const obj = {
+          id: doc.id,
+          ...doc.data(),
+        };
+
+        productsArray.push(obj);
+        setLoading(false);
+      });
 
       setProducts(productsArray);
-    
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   }
 
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
- 
+  const addToCart = (product) => {
+    dispatch({ type: "ADD_TO_CART", payload: product });
+  };
 
   return (
     <Layout loading={loading}>
       <div className="container">
         <div className="d-flex w-50 align-items-center my-3 justify-content-center">
-          
           <input
             type="text"
             value={searchKey}
@@ -62,10 +69,10 @@ function Homepage() {
             }}
           >
             <option value="">All</option>
-            <option value="men-wear">MEN'S</option>
-            <option value="women-wear">WOMEN'S</option>
-            <option value="gaming">GAMING ACCESSORIES</option>
-            <option value="electronics">ELECTRONICS</option>
+            <option value="men">Men's Wear</option>
+            <option value="woman">Women's Wear</option>
+            <option value="phone">SmartPhones</option>
+            <option value="acc">Accessories</option>
           </select>
         </div>
         <div className="row">
@@ -79,17 +86,23 @@ function Homepage() {
                     <div className="product-content">
                       <div className="text-center">
                         <img
-                          src={product.imageURL}
+                          src={product.ImageURL}
                           alt=""
                           className="product-img"
                         />
                       </div>
                       <p>{product.name}</p>
-                      <p>Phone no : {product.number}</p>
+                      <p className="fs-6">{product.detail}</p>
                     </div>
                     <div className="product-actions">
+                      <h2>{product.price} RS/-</h2>
                       <div className="d-flex">
-                        <button><Link to="/discription">View</Link></button>
+                      <button
+                          className="mx-2"
+                          onClick={() => addToCart(product)}
+                        >
+                          ADD TO CART
+                        </button>
                       </div>
                     </div>
                   </div>

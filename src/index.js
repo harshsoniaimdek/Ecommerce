@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
+import { Provider } from "react-redux"; // It is used to provide store to each and every component
 import { store } from "./redux/store";
 
 ReactDOM.render(

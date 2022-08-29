@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../components/Layout";
+import Layout from "../Components/Layout";
 import {
   collection,
   addDoc,
@@ -8,7 +8,7 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import fireDB from "../fireConfig";
+import fireDB from "../FireConfig";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Modal, Tabs, Tab } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -18,7 +18,9 @@ function AdminPage() {
   const [product, setProduct] = useState({
     name: "",
     price: 0,
-    imageURL: "",
+    count: 1,
+    detail: "",
+    ImageURL: "",
     category: "",
   });
 
@@ -33,26 +35,22 @@ function AdminPage() {
   async function getData() {
     try {
       setLoading(true);
-      const users = await getDocs(collection(fireDB, "restros"));
+      const users = await getDocs(collection(fireDB, "items"));
       const productsArray = [];
       users.forEach((doc) => {
         const obj = {
           id: doc.id,
           ...doc.data(),
         };
-
         productsArray.push(obj);
         setLoading(false);
-      });
-
+         });
       setProducts(productsArray);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
   }
-
-  
 
   const editHandler = (item) => {
     setProduct(item);
@@ -62,7 +60,7 @@ function AdminPage() {
   const updateProduct = async () => {
     try {
       setLoading(true);
-      await setDoc(doc(fireDB, "restros", product.id), product);
+      await setDoc(doc(fireDB, "items", product.id), product);
 
       handleClose();
       toast.success("Product updated successfully");
@@ -76,7 +74,7 @@ function AdminPage() {
   const addProduct = async () => {
     try {
       setLoading(true);
-      await addDoc(collection(fireDB, "restros"), product);
+      await addDoc(collection(fireDB, "items"), product);
       handleClose();
       toast.success("Product added successfully");
       window.location.reload();
@@ -94,7 +92,7 @@ function AdminPage() {
   const deleteProduct = async (item) => {
     try {
       setLoading(true);
-      await deleteDoc(doc(fireDB, "restros", item.id));
+      await deleteDoc(doc(fireDB, "items", item.id));
       toast.success("Product deleted successfully");
       getData();
     } catch (error) {
@@ -122,6 +120,8 @@ function AdminPage() {
                 <th>Name</th>
                 <th>Category</th>
                 <th>Price</th>
+                <th>Detail</th>
+                <th>Count</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -130,11 +130,13 @@ function AdminPage() {
                 return (
                   <tr>
                     <td>
-                      <img src={item.imageURL} height="80" width="80" />
+                      <img src={item.ImageURL} height="80" width="80" />
                     </td>
                     <td>{item.name}</td>
                     <td>{item.category}</td>
-                    <td>{item.number}</td>
+                    <td>{item.price}</td>
+                    <td>{item.detail}</td>
+                    <td>{item.count}</td>
                     <td>
                       <FaTrash
                         color="red"
@@ -176,20 +178,11 @@ function AdminPage() {
                 />
                 <input
                   type="text"
-                  value={product.imageURL}
+                  value={product.ImageURL}
                   placeholder="image url"
                   className="form-control"
                   onChange={(e) =>
-                    setProduct({ ...product, imageURL: e.target.value })
-                  }
-                />
-                <input
-                  type="number"
-                  value={product.number}
-                  className="form-control"
-                  placeholder="number"
-                  onChange={(e) =>
-                    setProduct({ ...product, number: e.target.value })
+                    setProduct({ ...product, ImageURL: e.target.value })
                   }
                 />
                 <input
@@ -199,6 +192,32 @@ function AdminPage() {
                   placeholder="category"
                   onChange={(e) =>
                     setProduct({ ...product, category: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  value={product.detail}
+                  className="form-control"
+                  placeholder="detail"
+                  onChange={(e) =>
+                    setProduct({ ...product, detail: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  value={product.price}
+                  className="form-control"
+                  placeholder="price"
+                  onChange={(e) =>
+                    setProduct({ ...product, price: e.target.value })
+                  }
+                />
+                <input
+                  value={product.count}
+                  className="form-control"
+                  placeholder="count"
+                  onChange={(e) =>
+                    setProduct({ ...product, count: e.target.value })
                   }
                 />
 

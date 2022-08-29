@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaCartPlus, FaUser } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux"; //To access any data from reducer we use this
 
 function Header() {
+  const { cartItems } = useSelector((state) => state.cartReducer); // Here this we have used to destructrethe cart comonent and provide a length to cart
   const { user } = JSON.parse(localStorage.getItem("currentUser"));
 
   const logout = () => {
