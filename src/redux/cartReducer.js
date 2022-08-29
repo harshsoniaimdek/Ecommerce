@@ -1,13 +1,10 @@
-import * as types from "./authActionTypes"
+
 
 const Initial_State = {
     cartItems: [''],
     showCart: false,
-    loading: false,
-    currentUser: null,
-    error: null,
-  };
-  
+
+}
   export const cartReducer = (state = Initial_State, action) => {
         switch(action.type) {
             case 'ADD_TO_CART':
@@ -30,30 +27,7 @@ const Initial_State = {
                     ...state,
                     cartItems: RemoveExistingItem(state.cartItems, action.payload)
                 }
-        case types.REGISTER_START:
-        case types.LOGIN_START:
-        case types.LOGOUT_START:
-            return{
-                ...state, loading : true,
-            }
         
-        case types.LOGOUT_SUCCESS:
-            return{
-                ...state,
-                currentUser: null
-            }
-        
-        case types.REGISTER_SUCCESS:
-        case types.LOGIN_SUCCESS:
-            return{
-                ...state, loading: false, currentUser: action.payload,
-            };
-        case types.REGISTER_FAIL:
-        case types.LOGIN_FAIL:
-        case types.LOGOUT_FAIL:
-            return{
-                ...state, loading: false, error : action.payload,
-            }
                 default :
             return state;
         }
@@ -71,7 +45,7 @@ const Initial_State = {
     const existingItem = cartItems.find(item => item.id === itemRemove.id);
     console.log(existingItem);
     let newItem = [];
-    if (existingItem.count <= 2) {
+    if (existingItem.count <= 1) {
         newItem = cartItems.filter((item) => (item.id !== existingItem.id))
     }
     else {

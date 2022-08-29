@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth} from "firebase/auth";
 import { toast } from "react-toastify";
 import Loader from "../Components/Loader";
+import { loginUser } from "../redux/Login/loginAction";
+import { useDispatch } from "react-redux";
 
 function LoginPage() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,15 +15,18 @@ function LoginPage() {
   const login = async () => {
     try {
       setLoading(true);
-      const result = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      localStorage.setItem('currentUser' , JSON.stringify(result))
+      const result = {
+        auth: auth,
+        email: email,
+        password: password,
+      };
+      dispatch(loginUser(result));
+      // const result = await signInWithEmailAndPassword(auth, email, password);
+      // console.log("res:", result);
+      // localStorage.setItem("currentUser", JSON.stringify(result));
       setLoading(false);
-      toast.success("Login successfull");
-      window.location.href='/'
+      // toast.success("Login successfull");
+      // window.location.href = "/";
     } catch (error) {
       console.log(error);
       toast.error("Login failed");
@@ -55,13 +61,14 @@ function LoginPage() {
                 setPassword(e.target.value);
               }}
             />
-            
 
-            <button className="my-3" onClick={login}>Login</button>
+            <button className="my-3" onClick={() => login()}>
+              Login
+            </button>
 
             <hr />
 
-            <Link to='/register'>Click Here To Register</Link>
+            <Link to="/register">Click Here To Register</Link>
           </div>
         </div>
       </div>

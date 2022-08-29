@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import Loader from "../Components/Loader";
+import { useDispatch} from "react-redux";
+import { registerUser } from "../redux/Register/registerAction";
 import { toast } from "react-toastify";
+
 function RegisterPage() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
@@ -13,17 +17,17 @@ function RegisterPage() {
   const register = async () => {
     try {
       setLoading(true);
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(result);
+      const result = {
+        auth: auth,
+        email: email,
+        password: password,
+      };
+      dispatch(registerUser(result));
       setLoading(false);
-      toast.success("Registration successfull");
-      setEmail('')
-      setPassword('')
-      setCPassword('')
+      // toast.success("Registration successfull");
+      setEmail("");
+      setPassword("");
+      setCPassword("");
     } catch (error) {
       console.log(error);
       toast.error("Registration failed");
@@ -36,7 +40,6 @@ function RegisterPage() {
       {loading && <Loader />}
       <div className="register-top"></div>
       <div className="row justify-content-center">
-
         <div className="col-md-4 z1">
           <div className="register-form">
             <h2>Register</h2>
@@ -71,7 +74,7 @@ function RegisterPage() {
               }}
             />
 
-            <button className="my-3" onClick={register}>
+            <button className="my-3" onClick={() => register()}>
               REGISTER
             </button>
 
